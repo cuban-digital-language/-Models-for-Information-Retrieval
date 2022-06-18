@@ -1,0 +1,6 @@
+[submodule "tokenize"]
+	path = submodule/tokenizer
+	url = https://github.com/cuban-digital-language/tokenizer-digital-language
+[submodule "data"]
+	path = submodule/data
+	url = https://github.com/cuban-digital-language/data-mining.git
