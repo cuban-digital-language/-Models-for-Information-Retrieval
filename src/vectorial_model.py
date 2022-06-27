@@ -104,13 +104,17 @@ class VectorialModel:
                 except KeyError:
                     continue
 
-            ranking.append((tqw/(q2 * self.doc_w2[text_hsh]), text_hsh))
+            ww = self.doc_w2[text_hsh]
+            ranking.append((tqw/(q2 * ww) if q2 * ww > 0 else 0, text_hsh))
 
         ranking.sort(key=lambda x: x[0], reverse=True)
         return [ranking[i][1] for i in range(self.recover_len)]
 
-    def save_model(self, path):
-        with open(f'{path}/data_from_vectorial_model.json', 'w+') as f:
+    def dumps_path(self, path, key=""):
+        return f'{path}/{key}/data_from_vectorial_model.json'
+
+    def save_model(self, path, key=""):
+        with open(f'{path}/{key}/data_from_vectorial_model.json', 'w+') as f:
             f.write(json.dumps({
                 'ii': self.invected_index,
                 'd2v': self.doc2vec,
@@ -120,8 +124,8 @@ class VectorialModel:
 
             f.close()
 
-    def load_model(self, path):
-        with open(f'{path}/data_from_vectorial_model.json', 'r') as f:
+    def load_model(self, path, key=''):
+        with open(f'{path}/{key}/data_from_vectorial_model.json', 'r') as f:
             data = json.load(f)
             self.invected_index = data['ii']
             self.doc2vec = data['d2v']

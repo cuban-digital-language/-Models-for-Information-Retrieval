@@ -25,7 +25,7 @@ class ProbabilisticModel:
             self.inverted_index[term] = set([dj])
 
     def computing_independent_values(self):
-        print(" malloc document vectors ")
+        self.pi = [0.5] * len(self.inverted_index)
         self.document_w_vector = np.zeros((self.N, len(self.inverted_index)))
         # self.document_w_vector = [
         #     [0] * len(self.inverted_index) for _ in range(self.N)]
@@ -64,8 +64,6 @@ class ProbabilisticModel:
             bar.update(i + 1)
         bar.finish()
 
-        self.pi = [0.5] * len(self.inverted_index)
-
         self.computing_independent_values()
 
     def sorted_and_find(self, query, recover_len=10):
@@ -79,50 +77,36 @@ class ProbabilisticModel:
         sim_result = []
         for i in range(self.N):
             sim_result.append(
-                (i, sum([self.document_w_vector[i][j] for j in query_term])))
+                (i, abs(sum([self.document_w_vector[i][j] for j in query_term]))))
         sim_result.sort(key=lambda x: x[1], reverse=True)
-
+        s = sum([v for _, v in sim_result])
         _len_ = recover_len if self.N > recover_len else self.N
         return [self.corpus[sim_result[i][0]] for i in range(_len_)]
 
-    def save_model(self, path):
-        # bar = get_progressbar(self.N, ' save doc vec ')
-        # bar.start()
-        # n = []
-        # for i, v in enumerate(self.document_w_vector):
-        #     n.append(tuple(v))
-        #     bar.update(i + 1)
-        # bar.finish()
+    def dumps_path(self, path, key=""):
+        return f'{path}/{key}/data_from_probabilistic_model.json'
 
-        with open(f'{path}/data_from_vectorial_model.json', 'w+') as f:
+    def save_model(self, path, k=""):
+        for key in self.inverted_index:
+            self.inverted_index[key] = tuple(self.inverted_index[key])
+
+        with open(self.dumps_path(path, k), 'w+') as f:
             f.write(json.dumps({
                 'ii': self.term_to_index,
-                # 'd2v': tuple(n),
+                'iii': self.inverted_index,
                 'corpus': self.corpus,
                 'N': self.N
             }))
 
             f.close()
 
-        b = self.document_w_vector.tolist()  # nested lists with same data, indices
-        file_path = f"{path}/probabilistic_doc_vec.json"  # your path variable
-        json.dump(b, codecs.open(file_path, 'w+', encoding='utf-8'),
-                  separators=(',', ':'),
-                  sort_keys=True,
-                  indent=4)  # this saves the array in .json format
-
-    def load_model(self, path):
-        with open(f'{path}/data_from_vectorial_model.json', 'r') as f:
+    def load_model(self, path, key=""):
+        with open(self.dumps_path(path, key), 'r') as f:
             data = json.load(f)
             self.term_to_index = data['ii']
-            # self.document_w_vector = data['d2v']
+            self.inverted_index = data['iii']
             self.corpus = data['corpus']
             self.N = data['N']
-
-        file_path = f"{path}/probabilistic_doc_vec.json"  # your path variable
-        obj_text = codecs.open(file_path, 'r', encoding='utf-8').read()
-        b_new = json.loads(obj_text)
-        self.document_w_vector = np.array(b_new)
 
 # a = np.arange(10).reshape(2, 5)  # a 2 by 5 array
 # b = a.tolist()  # nested lists with same data, indices
