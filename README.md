@@ -7,7 +7,7 @@ Proyecto investigativo con el objetivo de encontrar un buen sistema para realiza
 - `Thesaurus Strength`: Diccionario de sinónimos, con un enfoque de construcción automática, donde se definen la propiedad _"sinónimo de"_ por la correlación textual de los términos. [(link al código)](https://github.com/cuban-digital-language/Models-for-Information-Retrieval/blob/main/src/strength_thesaurus.py)
 - `Thesaurus Bayesiano`: Diccionario de sinónimos, con un enfoque de construcción automática, donde se definen la propiedad _"sinónimo de"_ es inferida por una red de probabilidades bayesianas. [(link al código)](https://github.com/cuban-digital-language/Models-for-Information-Retrieval/blob/main/src/bayesian_thesaurus.py)
 
-##### Lecturas Relacionadas:
+### Lecturas Relacionadas:
 
 - [Informe de la Investigación](https://github.com/cuban-digital-language/methodology/blob/main/sri.md)
 - [Investigación derivada, para encontrar algún mecanismo automático para evaluar estos sistemas](https://github.com/cuban-digital-language/methodology/blob/main/cluster-dateset.md)
